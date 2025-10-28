@@ -30,31 +30,7 @@ The CPU is designed using **SystemVerilog** in a fully structural and behavioral
 - **Branch & Jump Handling:** Supports PC update logic for BEQ, BNE, JAL, and JALR  
 - **Synthesizable:** Ready for FPGA implementation on Xilinx boards  
 
----
 
-## 🧩 Design Hierarchy
-
-RV-32I/
-├── ALU/
-│ ├── alu.sv
-│ └── alu_control.sv
-├── Control_Unit/
-│ └── main_control.sv
-├── Datapath/
-│ ├── register_file.sv
-│ ├── immediate_gen.sv
-│ ├── muxes.sv
-│ └── program_counter.sv
-├── Memory/
-│ ├── instruction_memory.sv
-│ └── data_memory.sv
-├── top_module.sv
-└── testbench/
-└── rv32i_tb.sv
-
-
-
----
 
 ## 🧪 Simulation
 
