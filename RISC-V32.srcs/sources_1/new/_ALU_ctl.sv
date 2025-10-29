@@ -27,7 +27,7 @@ module _ALU_ctl(
   output logic carry,
   output logic [1:0] comparator_clt
   );
-
+// Add XOR State :( 
 typedef enum logic [2:0] {
   S_IDLE,
   S_AND,
