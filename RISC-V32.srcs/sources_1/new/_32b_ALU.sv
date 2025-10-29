@@ -25,12 +25,12 @@ input logic [31:0] op1, op2,
 input logic [3:0] alu_ctl,
 output logic [31:0] result,
 output logic zero_flag,
-input logic [0:2] comprarator_clt
+input logic [0:2] comparator_clt
 );
 
 logic [31:0] output_buffer [3:0];
 logic [31:0] adder_src [1:0];
-logic [31:0] adder_buffer;
+logic [31:0] adder_buffer, xor_out;
 logic [31:0] adder_result;
 logic adder_carry;
 logic gnd;
@@ -50,12 +50,25 @@ _2o1_MUX adder_src_mux(.s(alu_ctl[2]), .id0(adder_src[0]), .id1(adder_src[1]), .
 //output_buffer[2] selection MUX id10 = adder_result, id1 = comparator result
 _2o1_MUX output_buffer2_src(.s(alu_ctl[3]), .id0(adder_result), .id1(comprarator_out), .od(adder_buffer));
 
+// XOR
+
+always_comb begin 
+assign xor_out = op1 ^ op2;
+end
 
 // AND
-assign output_buffer[0] = op1 & op2; 
 
 // OR 
-assign output_buffer[1] = op1 | op2;
+always_comb begin 
+if(comparator_clt == 2'b11) begin 
+    output_buffer[0] = op1 ^ op2;
+    end
+else begin 
+
+output_buffer[0] = op1 & op2;
+
+end
+end 
 
 // ADD
 _32b_ADDER _ALU_adder(.op1(op1), .op2(adder_buffer), .cin(alu_ctl[2]), .carry(gnd), .sum(adder_result));
@@ -92,23 +105,23 @@ case(adder_result)
 
   default:
   begin
-  if (adder_result[31] == 1'b1&& comprarator_clt == 2'b00) 
+  if (adder_result[31] == 1'b1&& comparator_clt == 2'b00) 
     begin  
         comprarator_out = 1;
         zero_flag = 1;
     end// rs1 < rs2 
 
-  else if (adder_result[31] != 1'b0 && comprarator_clt == 2'b01) begin 
+  else if (adder_result[31] != 1'b0 && comparator_clt == 2'b01) begin 
       comprarator_out = 0;
       zero_flag = 1;
   end //rs1 > rs2 
 
-  else if (~adder_carry && comprarator_clt == 2'b10) begin 
+  else if (~adder_carry && comparator_clt == 2'b10) begin 
       comprarator_out = 1;
       zero_flag = 1;
   end // rs1 < rs2 (unsigned)
 
-  else if (adder_carry && comprarator_clt == 2'b11) begin 
+  else if (adder_carry && comparator_clt == 2'b11) begin 
       comprarator_out = 0;
       zero_flag = 1;
   end // rs1 > rs2 (unsigned)
