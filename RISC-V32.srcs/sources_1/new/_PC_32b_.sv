@@ -28,13 +28,12 @@ module _PC_32b_(
   
   logic [31:0] PC;
 
-  always_ff@(posedge clk, write_enable) begin 
-  
-    if(write_enable) PC <= PCin;
-    
-    if(high_rst) PC <= 32'b0;
-
-    end
+  always_ff@(posedge clk or posedge high_rst) begin 
+  if (high_rst)
+  PCout <= 32'b0;
+  else if (write_enable)
+      PCout <= PCin;
+  end
 
   assign PCout = PC;
   

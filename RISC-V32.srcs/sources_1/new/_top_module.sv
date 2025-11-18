@@ -49,7 +49,7 @@ assign PC_select = BRANCH && ZERO_FLAG;
 assign PC_OFFSET = PC_address + ({1'b0 + {IMM12}} << 1);
 
 // PC select MUX
-_pc_select _PC_select(
+_PC_select _PC_select(
 .s(PC_select),
 .id0(PC_NEXT),
 .id1(PC_OFFSET),
@@ -57,7 +57,7 @@ _pc_select _PC_select(
 );
 
 //PC
-_pc _PC_32b_(
+ _PC_32b_ pc(
 .clk(clk),
 .high_rst(master_reset), 
 .write_enable(1'b0), // Hard code to one
@@ -66,7 +66,7 @@ _pc _PC_32b_(
 );
 
 // DECODER
-_decoder _32b_DECODER( 
+_32b_DECODER _decoder ( 
 .Iin(instru), // From Test Bench
 .rs1(RS1), 
 .rs2(RS2),
@@ -78,7 +78,7 @@ _decoder _32b_DECODER(
 );
 
 // REG_FILE
-_reg_file _32b_REG_FILE(
+_32b_REG_FILE _reg_file (
 .clk(clk), 
 .high_rst(master_reset),
 .write_enable(REG_WRITE),
@@ -91,13 +91,13 @@ _reg_file _32b_REG_FILE(
 );
 
 // IMM_GEN
-imm_gen _IMMGEN(
+_IMMGEN imm_gen (
 .imm12(IMM12),
 .signed_32(IMM32)
 );
 
 // ALU_SRC
-_alu_src _2o1_MUX(
+_2o1_MUX _alu_src (
 .s(ALU_SRC),
 .id0(REG2),
 .id1(IMM32),
@@ -107,7 +107,7 @@ _alu_src _2o1_MUX(
 
 
 // CONTROL_UNIT
-control_unit _main_ctl_(
+_main_ctl_ control_unit (
 .opcode(OPCODE),
 .RegWrite(REG_WRITE),
 .ALUSrc(ALU_SRC),
@@ -119,7 +119,7 @@ control_unit _main_ctl_(
 );
 
 // ALU_CONTROL
-alu_ctl _ALU_ctl(
+_ALU_ctl alu_ctl (
 .fun3(FUN3),
 .fun7(FUN7),
 .alu_ctl(ALU_CTL),
@@ -128,17 +128,17 @@ alu_ctl _ALU_ctl(
 );
   
 // ALU
-_alu _32b_ALU(
+_32b_ALU _alu (
 .op1(REG1),
 .op2(ALU_BUFFER),
 .alu_ctl(ALU_CTL),
 .result(RESULT),
 .zero_flag(ZERO_FLAG),
-.comprarator_clt(COMPARARTOR_CLT)
+.comparator_clt(COMPARARTOR_CLT)
 );
 
 //Output MUX
-_output_mux _output_mux(
+_2o1_MUX _output_mux (
 .s(MEMTO_REG),
 .id0(RESULT),
 .id1(mem_data_in),
