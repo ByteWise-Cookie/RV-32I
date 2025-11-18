@@ -53,7 +53,7 @@ _2o1_MUX output_buffer2_src(.s(alu_ctl[3]), .id0(adder_result), .id1(comprarator
 // XOR
 
 always_comb begin 
-assign xor_out = op1 ^ op2;
+xor_out = op1 ^ op2;
 end
 
 // AND
